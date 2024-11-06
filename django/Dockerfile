@@ -1,24 +1,20 @@
-# Use the official Python image from the Docker Hub
+# Use an official lightweight image with bash and Python support
 FROM python:3.12-slim
 
-# Set the working directory in the container
+# Set the working directory
 WORKDIR /app
 
-# Copy the requirements file to the container
-COPY ./requirements.txt /app/requirements.txt
+# Copy requirements.txt into the container
+COPY requirements.txt .
 
-# Install the required dependencies
-RUN pip install --no-cache-dir -r /app/requirements.txt
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the Django project code into the container
-COPY . /app
+# Copy the application code into the container (optional based on your app structure)
+COPY ./project .
 
-# Expose the port that Django will run on (matches the docker-compose.yml)
 EXPOSE 8000
 
-# Run database migrations and collect static files (adjust if needed)
 RUN python manage.py migrate
-#RUN python manage.py collectstatic --noinput
 
-# Define the default command to run your application with Gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "3", "test001.wsgi:application"]
+CMD ["gunicorn","--bind","0.0.0.0:8000","--workers","3","core.wsgi:application"]
