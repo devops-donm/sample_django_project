@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Variables (edit these as needed)
-DOMAIN="test.com"              # Primary domain
-ALT_DOMAIN="www.test.com"      # Alternative domain
+DOMAIN="test.local"              # Primary domain
+ALT_DOMAIN="www.test.local"      # Alternative domain
 CERT_DIR="/opt/docker_volume/nginx/certs"  # Directory to store the certificate
 KEY_FILE="${CERT_DIR}/${DOMAIN}.key"
 CERT_FILE="${CERT_DIR}/${DOMAIN}.crt"
