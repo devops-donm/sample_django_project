@@ -16,5 +16,5 @@ services:
     restart: always  # Restart container on failure/reboot
 
 networks:
-  app_network:
+  nginx_container_app_network:
     external: true  # Use the already existing app_network bridge
