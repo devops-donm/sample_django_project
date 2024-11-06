@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   django:
     image: django:latest  # Alternatively, you could build from your own Dockerfile
