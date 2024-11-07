@@ -11,7 +11,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the application code into the container (optional based on your app structure)
-COPY ./project .
+COPY . .
 
 EXPOSE 8000
 

@@ -1,9 +1,17 @@
-# docker-compose.yml
-
 services:
-  bash:
+  app:
     build:
-      context: ./app
-      dockerfile: Dockerfile
-    stdin_open: true  # Keep STDIN open for an interactive session
-    tty: true         # Allocate a pseudo-TTY for the container
+      context: ./django            # Set the build context to the django directory
+      dockerfile: Dockerfile       # Specify the Dockerfile in the django directory
+    image: sample_django_project:latest  # Custom Django project image
+    container_name: sample_django_project
+    ports:
+      - "8000:8000"               # Internal port for the application
+    command: gunicorn core.wsgi:application --bind 0.0.0.0:8000  # Gunicorn command to serve the Django app
+    networks:
+      nginx_container_app_network:
+        ipv4_address: 172.18.0.10  # Static IP address for the Django app on app_network
+
+networks:
+  nginx_container_app_network:
+    external: true  # Use the existing nginx_container_app_network defined by the Nginx service
