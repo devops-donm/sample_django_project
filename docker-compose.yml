@@ -1,17 +1,40 @@
 services:
-  app:
-    build:
-      context: ./django            # Set the build context to the django directory
-      dockerfile: Dockerfile       # Specify the Dockerfile in the django directory
-    image: sample_django_project:latest  # Custom Django project image
-    container_name: sample_django_project
-    ports:
-      - "8000:8000"               # Internal port for the application
-    command: gunicorn core.wsgi:application --bind 0.0.0.0:8000  # Gunicorn command to serve the Django app
+  db:
+    image: postgres:15           # Use the official PostgreSQL image
+    container_name: postgres_db
+    environment:
+      POSTGRES_DB: django_db      # Database name
+      POSTGRES_USER: django_user  # Database user
+      POSTGRES_PASSWORD: secure_password  # Database password (make this secure)
     networks:
       nginx_container_app_network:
-        ipv4_address: 172.18.0.10  # Static IP address for the Django app on app_network
+        ipv4_address: 172.18.0.11 # Static IP address for PostgreSQL
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Persist data in a Docker volume
+
+  app:
+    build:
+      context: ./django
+      dockerfile: Dockerfile
+    image: sample_django_project:latest
+    container_name: sample_django_project
+    ports:
+      - "8000:8000"
+    command: gunicorn core.wsgi:application --bind 0.0.0.0:8000
+    networks:
+      nginx_container_app_network:
+        ipv4_address: 172.18.0.10
+    depends_on:
+      - db                           # Ensure PostgreSQL is ready before starting Django
+    environment:
+      POSTGRES_DB: django_db
+      POSTGRES_USER: django_user
+      POSTGRES_PASSWORD: secure_password
+      POSTGRES_HOST: db              # Reference the PostgreSQL service
 
 networks:
   nginx_container_app_network:
-    external: true  # Use the existing nginx_container_app_network defined by the Nginx service
+    external: true
+
+volumes:
+  postgres_data:                    # Define the volume for persisting PostgreSQL data
