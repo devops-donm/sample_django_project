@@ -10,11 +10,9 @@ COPY requirements.txt .
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the application code into the container (optional based on your app structure)
+# Copy the application code into the container
 COPY . .
 
 EXPOSE 8000
 
-RUN python manage.py migrate
-
-CMD ["gunicorn","--bind","0.0.0.0:8000","--workers","3","core.wsgi:application"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "3", "core.wsgi:application"]
