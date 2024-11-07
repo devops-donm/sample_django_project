@@ -10,7 +10,7 @@ services:
       nginx_container_app_network:
         ipv4_address: 172.18.0.11 # Static IP address for PostgreSQL
     volumes:
-      - postgres_data:/var/lib/postgresql/data  # Persist data in a Docker volume
+      - /opt/docker_volume/sample_django_project/database:/var/lib/postgresql/data
 
   app:
     build:
