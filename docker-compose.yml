@@ -1,11 +1,9 @@
 services:
   db:
     image: postgres:15           # Use the official PostgreSQL image
-    container_name: postgres_db
-    environment:
-      POSTGRES_DB: django_db      # Database name
-      POSTGRES_USER: django_user  # Database user
-      POSTGRES_PASSWORD: secure_password  # Database password (make this secure)
+    container_name: sample_django_project_postgres_db
+    env_file:
+      - /opt/docker_volume/sample_django_project/secrets/.env  # Use the .env file for environment variables
     networks:
       nginx_container_app_network:
         ipv4_address: 172.18.0.11 # Static IP address for PostgreSQL
@@ -26,11 +24,8 @@ services:
         ipv4_address: 172.18.0.10
     depends_on:
       - db                           # Ensure PostgreSQL is ready before starting Django
-    environment:
-      POSTGRES_DB: django_db
-      POSTGRES_USER: django_user
-      POSTGRES_PASSWORD: secure_password
-      POSTGRES_HOST: db              # Reference the PostgreSQL service
+    env_file:
+      - /opt/docker_volume/sample_django_project/secrets/.env  # Use the .env file for environment variables
 
 networks:
   nginx_container_app_network:
